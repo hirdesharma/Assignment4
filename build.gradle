@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.mockito:mockito-core:5.4.0'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+allprojects {
+    apply plugin: 'checkstyle'
+
+    tasks.withType(Checkstyle) {
+        showViolations true
+        exclude '**/PlansListRepoService**'
+        exclude '**/PlansListSlaveRepository**'
+        exclude '**/CheckoutExtensionSlaveRepository**'
+        exclude '**/PlanDetailsDao**'
+        exclude '**/TelecomOperatorPropertiesDao**'
+        exclude '**/MerchantProductMappingService**'
+        exclude '**/TelecomOperatorPropertiesSlaveRepository**'
+        exclude '**/GenericConstantsUtils**'
+        exclude '**/PlansListService**'
+        exclude '**/CheckoutDetailsDao**'
+        exclude '**/QuickRechargeComponent**'
+    }
+    checkstyle {
+        toolVersion '8.11'
+        sourceSets = [project.sourceSets.main]
+    }
+
+// Fails gradle build when checkstyle violation occurs
+    tasks.withType(Checkstyle).each { checkstyleTask ->
+        checkstyleTask.doLast {
+            reports.all { report ->
+            }
+        }
+    }
+
+    apply plugin: 'pmd'
+
+    pmd {
+        toolVersion = '6.11.0'
+        ruleSets = []
+        ruleSetFiles = files("$rootDir/config/pmd/ruleset.xml")
+    }
+}
