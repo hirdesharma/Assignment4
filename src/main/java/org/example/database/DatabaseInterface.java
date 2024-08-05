@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public interface DatabaseInterface {
-  public Connection getConnection() throws SQLException;
+  Connection getConnection() throws SQLException;
 
-  public ResultSet getItemData() throws SQLException;
+  ResultSet getItemData() throws SQLException;
 
-  public void closeResources(final Connection connection, final Statement statement,
-                             final ResultSet resultSet) throws SQLException;
+  void closeResources(final Connection connection, final Statement statement,
+                      final ResultSet resultSet) throws SQLException;
 }
