@@ -24,10 +24,9 @@ public class Main {
     Thread producerThread = new Thread(producer);
     Thread consumerThread = new Thread(consumer);
 
-    producerThread.start();
-    consumerThread.start();
-
     try {
+      producerThread.start();
+      consumerThread.start();
       producerThread.join();
       consumerThread.join();
     } catch (InterruptedException e) {
