@@ -16,20 +16,24 @@ public class DatabaseConnection implements DatabaseInterface {
 
   @Override
   public final Connection getConnection() throws SQLException {
-    String url = config.getDatabaseUrl();
-    String username = config.getDatabaseUsername();
-    String password = config.getDatabasePassword();
+    final String url = config.getDatabaseUrl();
+    final String username = config.getDatabaseUsername();
+    final String password = config.getDatabasePassword();
     return DriverManager.getConnection(url, username, password);
   }
 
   @Override
   public final ResultSet getItemData() throws SQLException {
+    Connection connection = null;
+    Statement statement = null;
     try {
-      final Connection connection = getConnection();
-      final Statement statement = connection.createStatement();
-      return statement.executeQuery("SELECT * FROM items");
+      connection = getConnection();
+      statement = connection.createStatement();
+      return statement.executeQuery("SELECT * FROM itemdata");
     } catch (SQLException e) {
       throw new SQLException("Error executing query: " + e.getMessage(), e);
+    } finally {
+      closeResources(connection, statement, null);
     }
   }
 

@@ -59,7 +59,7 @@ class DatabaseConnectionTest {
           .thenReturn(mockConnection);
 
       when(mockConnection.createStatement()).thenReturn(mockStatement);
-      when(mockStatement.executeQuery("SELECT * FROM items")).thenReturn(mockResultSet);
+      when(mockStatement.executeQuery("SELECT * FROM itemdata")).thenReturn(mockResultSet);
 
       ResultSet resultSet = databaseConnection.getItemData();
 
@@ -67,7 +67,7 @@ class DatabaseConnectionTest {
       assertEquals(mockResultSet, resultSet);
 
       verify(mockConnection, times(1)).createStatement();
-      verify(mockStatement, times(1)).executeQuery("SELECT * FROM items");
+      verify(mockStatement, times(1)).executeQuery("SELECT * FROM itemdata");
     }
   }
 }

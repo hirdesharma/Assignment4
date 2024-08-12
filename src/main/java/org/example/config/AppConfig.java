@@ -5,10 +5,10 @@ import java.util.Map;
 import org.yaml.snakeyaml.Yaml;
 
 public class AppConfig {
-  private Map<String, Object> config;
+  private final Map<String, Object> config;
 
   public AppConfig() {
-    Yaml yaml = new Yaml();
+    final Yaml yaml = new Yaml();
     try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(
         "application.yml")) {
       if (inputStream != null) {
