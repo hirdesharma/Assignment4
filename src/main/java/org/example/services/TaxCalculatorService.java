@@ -3,16 +3,20 @@ package org.example.services;
 import java.util.HashMap;
 import java.util.Map;
 import org.example.enums.ItemType;
+import org.example.factories.ImportedItemTaxFactory;
+import org.example.factories.ManufacturedItemTaxFactory;
+import org.example.factories.RawItemTaxFactory;
+import org.example.factories.TaxServiceFactory;
 
 public class TaxCalculatorService implements TaxCalculatorServiceInterface {
 
-  private final Map<ItemType, TaxCalculationInterface> taxStrategyMap;
+  private final Map<ItemType, TaxServiceFactory> taxFactoryMap;
 
   public TaxCalculatorService() {
-    taxStrategyMap = new HashMap<>();
-    taxStrategyMap.put(ItemType.RAW, new RawItemTaxService());
-    taxStrategyMap.put(ItemType.MANUFACTURED, new ManufacturedItemTaxService());
-    taxStrategyMap.put(ItemType.IMPORTED, new ImportedItemTaxService());
+    taxFactoryMap = new HashMap<>();
+    taxFactoryMap.put(ItemType.RAW, new RawItemTaxFactory());
+    taxFactoryMap.put(ItemType.MANUFACTURED, new ManufacturedItemTaxFactory());
+    taxFactoryMap.put(ItemType.IMPORTED, new ImportedItemTaxFactory());
   }
 
   @Override
@@ -21,11 +25,12 @@ public class TaxCalculatorService implements TaxCalculatorServiceInterface {
       throw new IllegalArgumentException("Price must be a non-null, non-negative value.");
     }
 
-    final TaxCalculationInterface strategy = taxStrategyMap.get(type);
-    if (strategy == null) {
+    final TaxServiceFactory factory = taxFactoryMap.get(type);
+    if (factory == null) {
       throw new IllegalArgumentException("Unsupported item type: " + type);
     }
 
-    return strategy.calculate(price);
+    final TaxCalculationInterface taxService = factory.createTaxService();
+    return taxService.calculate(price);
   }
 }
