@@ -33,7 +33,7 @@ public class DatabaseConnection implements DatabaseInterface {
     } catch (SQLException e) {
       throw new SQLException("Error executing query: " + e.getMessage(), e);
     } finally {
-      closeResources(connection, statement, null);
+      closeResources(null, statement, null);
     }
   }
 
