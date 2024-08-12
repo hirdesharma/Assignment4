@@ -5,13 +5,21 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.example.constants.DatabaseConstants;
+import org.example.config.AppConfig;
 
 public class DatabaseConnection implements DatabaseInterface {
+  private final AppConfig config;
+
+  public DatabaseConnection() {
+    this.config = new AppConfig();
+  }
+
   @Override
   public final Connection getConnection() throws SQLException {
-    return DriverManager.getConnection(DatabaseConstants.URL, DatabaseConstants.USER,
-        DatabaseConstants.PASSWORD);
+    String url = config.getDatabaseUrl();
+    String username = config.getDatabaseUsername();
+    String password = config.getDatabasePassword();
+    return DriverManager.getConnection(url, username, password);
   }
 
   @Override

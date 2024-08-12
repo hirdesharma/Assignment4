@@ -13,7 +13,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.example.constants.DatabaseConstants;
+import org.example.config.AppConfig;
 import org.example.database.DatabaseConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +22,10 @@ import org.mockito.MockedStatic;
 class DatabaseConnectionTest {
 
   private DatabaseConnection databaseConnection;
+  private final AppConfig config = new AppConfig();
+  String url = config.getDatabaseUrl();
+  String username = config.getDatabaseUsername();
+  String password = config.getDatabasePassword();
 
   @BeforeEach
   void setUp() {
@@ -32,16 +36,15 @@ class DatabaseConnectionTest {
   void testGetConnection() throws SQLException {
     try (MockedStatic<DriverManager> mockedDriverManager = mockStatic(DriverManager.class)) {
       Connection mockConnection = mock(Connection.class);
-      mockedDriverManager.when(() -> DriverManager.getConnection(
-              DatabaseConstants.URL, DatabaseConstants.USER, DatabaseConstants.PASSWORD))
+      mockedDriverManager.when(() -> DriverManager.getConnection(url, username, password))
           .thenReturn(mockConnection);
 
       Connection connection = databaseConnection.getConnection();
 
       assertNotNull(connection);
       assertEquals(mockConnection, connection);
-      mockedDriverManager.verify(() -> DriverManager.getConnection(
-          DatabaseConstants.URL, DatabaseConstants.USER, DatabaseConstants.PASSWORD), times(1));
+      mockedDriverManager.verify(() -> DriverManager.getConnection(url, username, password),
+          times(1));
     }
   }
 
@@ -52,8 +55,7 @@ class DatabaseConnectionTest {
     ResultSet mockResultSet = mock(ResultSet.class);
 
     try (MockedStatic<DriverManager> mockedDriverManager = mockStatic(DriverManager.class)) {
-      mockedDriverManager.when(() -> DriverManager.getConnection(
-              DatabaseConstants.URL, DatabaseConstants.USER, DatabaseConstants.PASSWORD))
+      mockedDriverManager.when(() -> DriverManager.getConnection(url, username, password))
           .thenReturn(mockConnection);
 
       when(mockConnection.createStatement()).thenReturn(mockStatement);
