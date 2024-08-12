@@ -1,12 +1,14 @@
 package org.example.enums;
 
+import java.util.Objects;
+
 public enum ItemType {
   RAW,
   MANUFACTURED,
   IMPORTED;
 
   public static ItemType fromString(final String type) {
-    if (type == null) {
+    if (Objects.isNull(type)) {
       throw new NullPointerException("Item type cannot be null");
     }
     try {
